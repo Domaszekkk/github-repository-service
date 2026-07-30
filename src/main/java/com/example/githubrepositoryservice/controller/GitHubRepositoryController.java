@@ -1,12 +1,12 @@
 package com.example.githubrepositoryservice.controller;
 
 import com.example.githubrepositoryservice.dto.RepositoryResponse;
-import com.example.githubrepositoryservice.entity.Repository;
 import com.example.githubrepositoryservice.service.GitHubRepositoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,8 +33,20 @@ public class GitHubRepositoryController {
         return gitHubRepositoryService.saveRepository(owner, repositoryName);
     }
 
-    @PutMapping
+    @PutMapping("/{owner}/{repository-name}")
+    @Operation(summary = "Update repository details", description = "Fetches latest repository details from GitHub API and updates the local database entry")
+    @ApiResponse(responseCode = "200", description = "Repository updated successfully")
+    @ApiResponse(responseCode = "404", description = "Repository not found on GitHub or not found in local database")
     public RepositoryResponse updatedRepository(@PathVariable String owner, @PathVariable("repository-name") String repositoryName) {
         return gitHubRepositoryService.updateRepository(owner, repositoryName);
+    }
+
+    @DeleteMapping("/{owner}/{repository-name}")
+    @Operation(summary = "Delete repository details", description = "Deletes repository details from the local database")
+    @ApiResponse(responseCode = "204", description = "Repository deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Repository not found in local database")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRepository(@PathVariable String owner, @PathVariable("repository-name") String repositoryName) {
+        gitHubRepositoryService.deleteRepository(owner, repositoryName);
     }
 }

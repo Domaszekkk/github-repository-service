@@ -57,7 +57,7 @@ public class GitHubRepositoryService {
             return gitHubApiClient.getRepository(owner, repositoryName);
         } catch (FeignException.NotFound e) {
             throw new RepositoryNotFoundException(owner, repositoryName);
-        } catch (FeignException.ServiceUnavailable e) {
+        } catch (feign.RetryableException e) {
             throw new GithubServiceUnavailableException();
         }
     }

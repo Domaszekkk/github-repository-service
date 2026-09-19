@@ -1,4 +1,4 @@
-package com.example.githubrepositoryservice.validator;
+package com.example.githubrepositoryservice;
 
 import com.example.githubrepositoryservice.exception.RepositoryAlreadyExistsException;
 import com.example.githubrepositoryservice.repository.RepositoryJpaRepository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RepositoryValidator {
-    private final RepositoryJpaRepository repositoryJpaRepository;
+    private final RepositoryProviderPort repositoryProviderPort;
     public void validateNotExists(String owner, String repositoryName) {
         String fullName = owner + "/" + repositoryName;
         if (repositoryJpaRepository.findByFullName(fullName).isPresent()) {

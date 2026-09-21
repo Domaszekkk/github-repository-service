@@ -10,49 +10,36 @@ public class GitHubRepositoryService {
     private final RepositoryValidatorPort repositoryValidatorPort;
 
     public Repository getRepository(String owner, String repositoryName) {
-        Repository dto = fetchFromGitHub(owner, repositoryName);
-        return;
+        return fetchFromGitHub(owner, repositoryName);
     }
 
     public Repository saveRepository(String owner, String repositoryName) {
         repositoryValidatorPort.validateNotExists(owner, repositoryName);
-        Repository dto = fetchFromGitHub(owner, repositoryName);
-        Repository repository = new Repository();
-        Repository saved = repositoryProviderPort.save(repository);
-        return;
+        Repository repository = fetchFromGitHub(owner, repositoryName);
+        return repositoryProviderPort.save(repository);
     }
 
-    public PageResponse<Repository> getRepositoryHistory(Pageable pageable) {
-        Page<Repository> page = repositoryProviderPort.findAll(pageable);
-        return PageResponse.from(page);
+    public Page<Repository> getRepositoryHistory(Pageable pageable) {
+        return repositoryProviderPort.findAll(pageable);
     }
 
     public Repository getRepositoryFromLocal(String owner, String repositoryName) {
         String fullName = owner + "/" + repositoryName;
-        Repository entity = repositoryProviderPort.findByFullName(fullName)
+        return repositoryProviderPort.findByFullName(fullName)
                 .orElseThrow(() -> new LocalRepositoryNotFoundException(owner, repositoryName));
-        return;
     }
 
     private Repository fetchFromGitHub(String owner, String repositoryName) {
-        try {
-            return gitHubApiProviderPort.getRepository(owner, repositoryName);
-        } catch (FeignException.NotFound e) {
-            throw new RepositoryNotFoundException(owner, repositoryName);
-        } catch (feign.RetryableException e) {
-            throw new GithubServiceUnavailableException();
-        }
+        return gitHubApiProviderPort.getRepository(owner, repositoryName);
     }
 
     public Repository updateRepository(String owner, String repositoryName) {
         String fullName = owner + "/" + repositoryName;
         Repository existing = repositoryProviderPort.findByFullName(fullName)
                 .orElseThrow(() -> new LocalRepositoryNotFoundException(owner, repositoryName));
-        Repository dto = fetchFromGitHub(owner, repositoryName);
-        Repository updated = gitHubRepositoryMapper.toEntity(dto);
-        updated.setId(existing.getId());
-        repositoryProviderPort.save(updated);
-        return;
+        Repository repository = fetchFromGitHub(owner, repositoryName);
+        repository.setId(existing.getId());
+        return repositoryProviderPort.save(repository);
     }
 
     public void deleteRepository(String owner, String repositoryName) {

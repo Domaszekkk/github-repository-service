@@ -5,10 +5,12 @@ import lombok.*;
 import java.time.Instant;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Repository {
+    private long id;
     private String fullName;
     private String description;
     private String cloneUrl;

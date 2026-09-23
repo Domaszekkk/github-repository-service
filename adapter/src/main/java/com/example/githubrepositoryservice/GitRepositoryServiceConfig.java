@@ -7,7 +7,13 @@ import org.springframework.context.annotation.Configuration;
 public class GitRepositoryServiceConfig {
 
     @Bean
-    GitHubRepositoryService GitHubRepositoryService {
-        return new GitHubRepositoryService()
+    GitHubRepositoryService gitHubRepositoryService(
+            GitHubApiProviderPort gitHubApiProviderPort,
+            RepositoryProviderPort repositoryProviderPort,
+            RepositoryValidatorPort repositoryValidatorPort) {
+        return new GitHubRepositoryService(
+                gitHubApiProviderPort,
+                repositoryProviderPort,
+                repositoryValidatorPort);
     }
 }

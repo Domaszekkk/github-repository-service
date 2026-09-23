@@ -1,4 +1,4 @@
-package com.example.githubrepositoryservice.exception;
+package com.example.githubrepositoryservice;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,7 +9,7 @@ public class GithubRepositoryExceptionHandler {
     @ExceptionHandler(GithubRepositoryException.class)
     public ResponseEntity<ErrorMessage> handleGithubRepositoryException(GithubRepositoryException exception) {
         return ResponseEntity
-                .status(exception.getStatus())
+                .status(exception.getResponseCode())
                 .body(new ErrorMessage(exception.getMessage()));
     }
 }

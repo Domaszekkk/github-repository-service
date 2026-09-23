@@ -1,4 +1,4 @@
-package com.example.githubrepositoryservice.exception;
+package com.example.githubrepositoryservice;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

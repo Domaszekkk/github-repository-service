@@ -1,4 +1,4 @@
-package com.example.githubrepositoryservice.entity;
+package com.example.githubrepositoryservice;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Repository {
+public class RepositoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

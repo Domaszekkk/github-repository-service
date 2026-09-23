@@ -1,4 +1,4 @@
-package com.example.githubrepositoryservice.config;
+package com.example.githubrepositoryservice;
 
 import feign.Retryer;
 import feign.codec.ErrorDecoder;

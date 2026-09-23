@@ -1,7 +1,5 @@
-package com.example.githubrepositoryservice.controller;
+package com.example.githubrepositoryservice;
 
-import com.example.githubrepositoryservice.dto.RepositoryResponse;
-import com.example.githubrepositoryservice.service.GitHubRepositoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,15 +12,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "GitHub Repository", description = "Fetching repository details from GitHub")
 public class GitHubRepositoryController {
-
     private final GitHubRepositoryService gitHubRepositoryService;
+    private final RepositoryMapper mapper;
 
     @GetMapping("/{owner}/{repository-name}")
     @Operation(summary = "Get repository details", description = "Fetches repository details from GitHub API")
     @ApiResponse(responseCode = "200", description = "Repository found and returned")
     @ApiResponse(responseCode = "404", description = "Repository not found on GitHub")
     public RepositoryResponse getRepository(@PathVariable String owner, @PathVariable("repository-name") String repositoryName) {
-        return gitHubRepositoryService.getRepository(owner, repositoryName);
+        Repository repository = gitHubRepositoryService.getRepository(owner, repositoryName);
+        return mapper.toResponse(repository);
     }
 
     @PostMapping("/{owner}/{repository-name}")
@@ -30,7 +29,8 @@ public class GitHubRepositoryController {
     @ApiResponse(responseCode = "200", description = "Repository fetched and saved successfully")
     @ApiResponse(responseCode = "404", description = "Repository not found on GitHub")
     public RepositoryResponse saveRepository(@PathVariable String owner, @PathVariable("repository-name") String repositoryName) {
-        return gitHubRepositoryService.saveRepository(owner, repositoryName);
+        Repository repository = gitHubRepositoryService.saveRepository(owner, repositoryName);
+        return mapper.toResponse(repository);
     }
 
     @PutMapping("/{owner}/{repository-name}")
@@ -38,7 +38,8 @@ public class GitHubRepositoryController {
     @ApiResponse(responseCode = "200", description = "Repository updated successfully")
     @ApiResponse(responseCode = "404", description = "Repository not found on GitHub or not found in local database")
     public RepositoryResponse updatedRepository(@PathVariable String owner, @PathVariable("repository-name") String repositoryName) {
-        return gitHubRepositoryService.updateRepository(owner, repositoryName);
+        Repository repository = gitHubRepositoryService.updateRepository(owner, repositoryName);
+        return mapper.toResponse(repository);
     }
 
     @DeleteMapping("/{owner}/{repository-name}")
